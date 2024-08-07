@@ -584,7 +584,11 @@ export function ASCII({ children }) {
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.shiftKey && event.key === 'R') {
-        _set((prev) => ({ ...prev, matrix: !prev.matrix }))
+        console.log('Shift + R pressed')
+        _set((prev) => {
+          console.log('Previous matrix state:', prev.matrix)
+          return { ...prev, matrix: !prev.matrix }
+        })
       }
     }
 
