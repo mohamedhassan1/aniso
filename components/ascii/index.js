@@ -220,12 +220,12 @@ function Scene() {
                     const fontData = event.target.result
                     const fontName = 'CustomFont' // Choose a name for your custom font
 
-                    const fontFace = 
+                    const fontFace = `
                     @font-face {
                       font-family: '${fontName}';
                       src: url(${fontData});
                     }
-                  
+                  `
 
                     const styleElement = document.createElement('style')
                     styleElement.innerHTML = fontFace
@@ -379,7 +379,7 @@ const DEFAULT = {
   fillPixels: false,
   setColor: true,
   color: '#ffffff',
-  background: '#000000',
+  background: '#cd9bff',
   greyscale: false,
   invert: false,
   matrix: false,
