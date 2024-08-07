@@ -372,7 +372,7 @@ function Inner() {
 }
 
 const DEFAULT = {
-  characters: ' *,    ./O#RLI',
+  characters: ' *,    ./O#RL',
   granularity: 8,
   charactersLimit: 16,
   fontSize: 72,
