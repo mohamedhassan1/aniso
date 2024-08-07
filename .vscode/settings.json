@@ -9,5 +9,8 @@
     "*.js": "javascriptreact"
   },
   "prettier.enable": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
