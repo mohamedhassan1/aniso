@@ -343,7 +343,6 @@ function Inner() {
   return (
     <>
       <div className={s.ascii}>
-        <GUI />
         <div className={cn(s.canvas, gui && s.open)}>
           <Canvas
             flat
@@ -373,7 +372,7 @@ function Inner() {
 }
 
 const DEFAULT = {
-  characters: ' *,    ./O#SF',
+  characters: ' *,    ./O#RL',
   granularity: 8,
   charactersLimit: 16,
   fontSize: 72,
