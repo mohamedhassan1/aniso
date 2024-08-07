@@ -220,12 +220,12 @@ function Scene() {
                     const fontData = event.target.result
                     const fontName = 'CustomFont' // Choose a name for your custom font
 
-                    const fontFace = 
+                    const fontFace = `
                     @font-face {
                       font-family: '${fontName}';
                       src: url(${fontData});
                     }
-                  
+                  `
 
                     const styleElement = document.createElement('style')
                     styleElement.innerHTML = fontFace
@@ -372,7 +372,7 @@ function Inner() {
 }
 
 const DEFAULT = {
-  characters: ' *,    ./O#RL',
+  characters: ' *,    ./O#Rl',
   granularity: 8,
   charactersLimit: 16,
   fontSize: 72,
@@ -579,25 +579,6 @@ export function ASCII({ children }) {
     if (canvas) setCanvas(canvas)
     _set(props)
   }
-
-  // Add keydown event listener for Shift + R
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (event.shiftKey && event.key === 'R') {
-        console.log('Shift + R pressed')
-        _set((prev) => {
-          console.log('Previous matrix state:', prev.matrix)
-          return { ...prev, matrix: !prev.matrix }
-        })
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [_set])
 
   return (
     <>
