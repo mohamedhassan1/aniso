@@ -580,6 +580,21 @@ export function ASCII({ children }) {
     _set(props)
   }
 
+  // Add keydown event listener for Shift + R
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.shiftKey && event.key === 'R') {
+        _set((prev) => ({ ...prev, matrix: !prev.matrix }))
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [_set])
+
   return (
     <>
       {/* <p className={s.instruction}>
