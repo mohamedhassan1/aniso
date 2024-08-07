@@ -1,4 +1,4 @@
-import Logo from 'assets/svg/logo.svg'
+/* import Logo from 'assets/svg/logo.svg'
 import Panel from 'assets/svg/panel.svg'
 import cn from 'clsx'
 import levaTheme from 'config/leva'
@@ -68,3 +68,4 @@ export function GUI() {
     </div>
   )
 }
+ */
