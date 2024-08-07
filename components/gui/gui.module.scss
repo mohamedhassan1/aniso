@@ -1,5 +1,5 @@
 .gui {
-  // position: fixed;
+  // position: none;
   width: 312px;
   height: 100vh;
   background-color: #121212;
@@ -13,7 +13,7 @@
   line-height: 130%;
   transition: transform 600ms var(--ease-out-expo);
   flex-shrink: 0;
-  position: relative;
+  position: none;
 
   input[id='characters'] {
     font-family: 'CustomFont', var(--font-NonNaturalMono);
