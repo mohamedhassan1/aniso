@@ -3,8 +3,8 @@
     width: 0px;
     height: 0px;
     background-color: #121212;
-    z-index: 2;
-    padding: 28px;
+    z-index: -1;
+    padding: 0px;
     text-transform: uppercase;
     color: var(--grey);
     font-family: var(--font-NonNaturalMono);
@@ -33,24 +33,24 @@
     }
   
     .toggle {
-      width: 24px;
-      height: 16px;
+      width: 0px;
+      height: 0px;
       position: absolute;
-      right: 28px;
-      top: 28px;
-      z-index: 3;
+      right: 0px;
+      top: 0px;
+      z-index: -3;
   
       &::before {
         content: '';
         position: absolute;
-        width: 48px;
-        height: 48px;
+        width: 0px;
+        height: 0px;
         background-color: #121212;
         z-index: -1;
         border-radius: 100%;
         transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
+        top: 0%;
+        left: 0%;
       }
     }
   
@@ -94,7 +94,7 @@
     }
   
     .leva {
-      margin-bottom: 40px;
+      margin-bottom: 0px;
   
       input,
       select {
