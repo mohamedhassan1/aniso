@@ -183,7 +183,7 @@ function Scene() {
 
   useEffect(() => {
     if (texture) {
-      camera.position.set(10, 10, 250)
+      camera.position.set(0, 0,5)
       camera.rotation.set(0, 0, 0)
       camera.zoom = 1
     } else {
@@ -348,7 +348,7 @@ function Inner() {
             flat
             linear
             orthographic
-            camera={{ position: [0, 0, 500], near: 0.1, far: 10000 }}
+            camera={{ position: [0, 0, 5000], near: 0.1, far: 10000 }}
             resize={{ debounce: 100 }}
             gl={{
               antialias: false,
