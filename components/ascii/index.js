@@ -183,7 +183,7 @@ function Scene() {
 
   useEffect(() => {
     if (texture) {
-      camera.position.set(0, 0, 5)
+      camera.position.set(0, 0, 25)
       camera.rotation.set(0, 0, 0)
       camera.zoom = 1
     } else {
