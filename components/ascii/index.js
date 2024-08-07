@@ -379,7 +379,7 @@ const DEFAULT = {
   fillPixels: false,
   setColor: true,
   color: '#ffffff',
-  background: '#000000',
+  background: '#cd9bff',
   greyscale: false,
   invert: false,
   matrix: false,
