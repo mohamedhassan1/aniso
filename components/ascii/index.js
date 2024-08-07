@@ -3,12 +3,9 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { EffectComposer } from '@react-three/postprocessing'
 import cn from 'clsx'
 import { ASCIIEffect } from 'components/ascii-effect/index'
-import { FontEditor } from 'components/font-editor'
-import { GUI } from 'components/gui'
-import { button, useControls } from 'leva'
-import { text } from 'lib/leva/text'
-import { useStore } from 'lib/store'
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import tunnel from 'tunnel-rat'
+import s from './ascii.module.scss'
+import { AsciiContext } from './context'
 import {
   AnimationMixer,
   Group,
@@ -19,9 +16,7 @@ import {
 } from 'three'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import tunnel from 'tunnel-rat'
-import s from './ascii.module.scss'
-import { AsciiContext } from './context'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 const ui = tunnel()
 
@@ -128,19 +123,6 @@ function Scene() {
   }, [asset])
 
   const { viewport, camera } = useThree()
-
-  // const initialCamera = useRef()
-
-  // useEffect(() => {
-  //   initialCamera.current = camera.clone()
-  // }, [])
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     camera.position.copy(initialCamera.current.position)
-  //     camera.rotation.copy(initialCamera.current.rotation)
-  //   }, 0)
-  // }, [texture, gltf, camera])
 
   const dimensions = useMemo(() => {
     if (!texture) return
@@ -250,18 +232,12 @@ function Scene() {
       </ui.In>
 
       <group ref={ref}>
-        {/* <mesh geometry={gltf.nodes.Cube.geometry}>
-          <meshBasicMaterial color="#ff0000" />
-        </mesh> */}
-
         {gltf && (
           <>
             <OrbitControls makeDefault />
-            {/* <Bounds fit observe margin={1.2}> */}
             <group scale={200}>
               <primitive object={gltf} />
             </group>
-            {/* </Bounds> */}
           </>
         )}
 
@@ -271,11 +247,6 @@ function Scene() {
             <meshBasicMaterial map={texture} />
           </mesh>
         )}
-
-        {/* <mesh scale={2}>
-          <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-          <meshNormalMaterial attach="material" />
-        </mesh> */}
       </group>
     </>
   )
@@ -284,23 +255,10 @@ function Scene() {
 function Postprocessing() {
   const { gl, viewport } = useThree()
   const { set } = useContext(AsciiContext)
-  // const effectComposer = useRef()
 
   useEffect(() => {
     set({ canvas: gl.domElement })
   }, [gl])
-
-  // useControls(() => ({
-  //   export: button(() => {
-  //     let a = document.createElement('a')
-  //     a.download = 'ASCII'
-  //     // effectComposer.current.render(scene, camera)
-  //     requestAnimationFrame(() => {
-  //       a.href = gl.domElement.toDataURL('image/png;base64')
-  //       a.click()
-  //     })
-  //   }),
-  // }))
 
   const {
     charactersTexture,
@@ -314,7 +272,6 @@ function Postprocessing() {
     time,
     background,
   } = useContext(AsciiContext)
-  console.log('background', background)
 
   return (
     <EffectComposer>
@@ -338,12 +295,10 @@ function Postprocessing() {
 function Inner() {
   const ContextBridge = useContextBridge(AsciiContext)
 
-  const gui = useStore(({ gui }) => gui)
-
   return (
     <>
       <div className={s.ascii}>
-        <div className={cn(s.canvas, gui && s.open)}>
+        <div className={cn(s.canvas)}>
           <Canvas
             flat
             linear
@@ -365,7 +320,6 @@ function Inner() {
           </Canvas>
         </div>
       </div>
-      <FontEditor />
       <ui.Out />
     </>
   )
@@ -395,217 +349,87 @@ export function ASCII({ children }) {
   )
 
   const [charactersTexture, setCharactersTexture] = useState(null)
-  // const [characters, setCharacters] = useState(
-  //   initialUrlParams.get('characters') || DEFAULT.characters
-  // )
   const [canvas, setCanvas] = useState()
 
-  const [
-    {
-      characters,
-      granularity,
-      charactersLimit,
-      fontSize,
-      fillPixels,
-      setColor,
-      color,
-      fit,
-      greyscale,
-      invert,
-      matrix,
-      setTime,
-      time,
-      background,
-    },
-    _set,
-  ] = useControls(
-    () => ({
-      characters: text(
-        initialUrlParams.get('characters') || DEFAULT.characters
-      ),
-      // characters: {
-      //   value: initialUrlParams.get('characters') || DEFAULT.characters,
-      // },
-      granularity: {
-        min: 4,
-        max: 32,
-        value: initialUrlParams.get('granularity') || DEFAULT.granularity,
-        step: 1,
-        label: 'granularity',
-      },
-      charactersLimit: {
-        min: 1,
-        max: 48,
-        value:
-          initialUrlParams.get('charactersLimit') || DEFAULT.charactersLimit,
-        step: 1,
-        label: 'charLimit',
-      },
-      fontSize: {
-        min: 1,
-        max: 128,
-        value: initialUrlParams.get('fontSize') || DEFAULT.fontSize,
-        step: 1,
-        label: 'font size',
-      },
-      greyscale: {
-        value:
-          initialUrlParams.get('greyscale') === 'true' || DEFAULT.greyscale,
-      },
-      invert: {
-        value: initialUrlParams.get('invert') === 'true' || DEFAULT.invert,
-      },
-      fillPixels: {
-        value:
-          initialUrlParams.get('fillPixels') === 'true' || DEFAULT.fillPixels,
-        label: 'fill pixels',
-      },
-      fit: {
-        value: initialUrlParams.get('fit') || DEFAULT.fit,
-      },
-      matrix: {
-        value: initialUrlParams.get('matrix') === 'true' || DEFAULT.matrix,
-      },
-      setTime: {
-        value: !!initialUrlParams.get('time') || DEFAULT.setTime,
-        label: 'set time',
-        render: (get) => get('matrix') === true,
-      },
-      time: {
-        min: 0,
-        value: parseFloat(initialUrlParams.get('time')) || DEFAULT.time,
-        max: 1,
-        step: 0.01,
-        render: (get) => get('setTime') === true,
-        // optional: true,
-        // disabled: !initialUrlParams.get('time'),
-      },
-      // overwriteColor: {
-      //   value: !!initialUrlParams.get('color') || DEFAULT.overwriteColor,
-      //   label: 'overwrite color',
-      // },
-      setColor: {
-        value: !!initialUrlParams.get('color') || DEFAULT.setColor,
-        label: 'set color',
-      },
-      color: {
-        value: initialUrlParams.get('color')
-          ? '#' + initialUrlParams.get('color')
-          : DEFAULT.color,
-        // optional: true,
-        label: 'color',
-        render: (get) => get('setColor') === true,
-        // disabled: !initialUrlParams.get('color'),
-      },
-      background: {
-        value: initialUrlParams.get('background')
-          ? '#' + initialUrlParams.get('background')
-          : DEFAULT.background,
-        // optional: true,
-        label: 'background',
-      },
-    }),
-    []
-  )
+  const [settings, setSettings] = useState({
+    characters: initialUrlParams.get('characters') || DEFAULT.characters,
+    granularity: initialUrlParams.get('granularity') || DEFAULT.granularity,
+    charactersLimit:
+      initialUrlParams.get('charactersLimit') || DEFAULT.charactersLimit,
+    fontSize: initialUrlParams.get('fontSize') || DEFAULT.fontSize,
+    fillPixels:
+      initialUrlParams.get('fillPixels') === 'true' || DEFAULT.fillPixels,
+    setColor: !!initialUrlParams.get('color') || DEFAULT.setColor,
+    color: initialUrlParams.get('color')
+      ? '#' + initialUrlParams.get('color')
+      : DEFAULT.color,
+    fit: initialUrlParams.get('fit') || DEFAULT.fit,
+    greyscale:
+      initialUrlParams.get('greyscale') === 'true' || DEFAULT.greyscale,
+    invert: initialUrlParams.get('invert') === 'true' || DEFAULT.invert,
+    matrix: initialUrlParams.get('matrix') === 'true' || DEFAULT.matrix,
+    setTime: !!initialUrlParams.get('time') || DEFAULT.setTime,
+    time: parseFloat(initialUrlParams.get('time')) || DEFAULT.time,
+    background: initialUrlParams.get('background')
+      ? '#' + initialUrlParams.get('background')
+      : DEFAULT.background,
+  })
 
-  useControls(
-    () => ({
-      export: button(() => {
-        let a = document.createElement('a')
-        a.download = 'ASCII'
-
-        requestAnimationFrame(() => {
-          a.href = canvas.toDataURL('image/png;base64')
-          a.click()
-        })
-      }),
-      reset: button(() => {
-        _set(DEFAULT)
-      }),
-    }),
-    [canvas]
-  )
-
-  const UrlParams = useMemo(() => {
-    // apply new url params
+  const updateUrlParams = useMemo(() => {
     const params = new URLSearchParams()
-    params.set('characters', characters)
-    params.set('granularity', granularity)
-    params.set('charactersLimit', charactersLimit)
-    params.set('fontSize', fontSize)
-    params.set('matrix', matrix === true)
-    params.set('invert', invert === true)
-    params.set('greyscale', greyscale === true)
-    params.set('fillPixels', fillPixels === true)
-    // params.set('overwriteColor', overwriteColor === true)
-    if (setTime) {
-      params.set('time', time)
+    params.set('characters', settings.characters)
+    params.set('granularity', settings.granularity)
+    params.set('charactersLimit', settings.charactersLimit)
+    params.set('fontSize', settings.fontSize)
+    params.set('matrix', settings.matrix === true)
+    params.set('invert', settings.invert === true)
+    params.set('greyscale', settings.greyscale === true)
+    params.set('fillPixels', settings.fillPixels === true)
+    if (settings.setTime) {
+      params.set('time', settings.time)
     } else {
       params.delete('time')
     }
-
-    if (setColor) {
-      params.set('color', color.replace('#', ''))
+    if (settings.setColor) {
+      params.set('color', settings.color.replace('#', ''))
     } else {
       params.delete('color')
     }
-
-    params.set('background', background.replace('#', ''))
+    params.set('background', settings.background.replace('#', ''))
     return params
-  }, [
-    characters,
-    granularity,
-    fontSize,
-    fillPixels,
-    setColor,
-    color,
-    invert,
-    greyscale,
-    matrix,
-    setTime,
-    time,
-    background,
-  ])
+  }, [settings])
 
   useEffect(() => {
-    // change history
-    const url = window.origin + '?' + UrlParams.toString()
+    const url = window.origin + '?' + updateUrlParams.toString()
     window.history.replaceState({}, null, url)
-  }, [UrlParams])
+  }, [updateUrlParams])
 
-  function set({ charactersTexture, canvas, ...props }) {
-    if (charactersTexture) setCharactersTexture(charactersTexture)
-    // if (characters) setCharacters(characters)
-    if (canvas) setCanvas(canvas)
-    _set(props)
+  function set(newSettings) {
+    setSettings((prevSettings) => ({ ...prevSettings, ...newSettings }))
+    if (newSettings.charactersTexture) setCharactersTexture(newSettings.charactersTexture)
+    if (newSettings.canvas) setCanvas(newSettings.canvas)
   }
 
   return (
-    <>
-      {/* <p className={s.instruction}>
-        Drag and drop any file (.glb, .mp4, .mov, .webm, .png, .jpg, .webp,
-        .avif)
-      </p> */}
-      <AsciiContext.Provider
-        value={{
-          characters: characters.toUpperCase(),
-          granularity,
-          charactersTexture,
-          charactersLimit,
-          fontSize,
-          fillPixels,
-          color: setColor ? color : undefined,
-          fit,
-          greyscale,
-          invert,
-          matrix,
-          time: setTime ? time : undefined,
-          background,
-          set,
-        }}
-      >
-        <Inner />
-      </AsciiContext.Provider>
-    </>
+    <AsciiContext.Provider
+      value={{
+        characters: settings.characters.toUpperCase(),
+        granularity: settings.granularity,
+        charactersTexture,
+        charactersLimit: settings.charactersLimit,
+        fontSize: settings.fontSize,
+        fillPixels: settings.fillPixels,
+        color: settings.setColor ? settings.color : undefined,
+        fit: settings.fit,
+        greyscale: settings.greyscale,
+        invert: settings.invert,
+        matrix: settings.matrix,
+        time: settings.setTime ? settings.time : undefined,
+        background: settings.background,
+        set,
+      }}
+    >
+      <Inner />
+    </AsciiContext.Provider>
   )
 }
