@@ -366,7 +366,6 @@ function Inner() {
         </div>
       </div>
       <FontEditor />
-      <ui.Out />
     </>
   )
 }
